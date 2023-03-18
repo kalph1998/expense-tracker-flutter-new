@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/expense_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -8,10 +9,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  void addNewExpense() {
+    showDialog(
+      context: context,
+      builder: (context) => const AlertDialog(
+        title: Text('Add new expense'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Expense calculator')),
+      backgroundColor: Colors.grey[300],
+      floatingActionButton: FloatingActionButton(
+        onPressed: addNewExpense,
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
