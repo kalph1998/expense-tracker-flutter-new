@@ -1,3 +1,4 @@
+import 'package:expense_calculator/components/expense_tile.dart';
 import 'package:expense_calculator/models/expense_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,13 +77,10 @@ class _HomePageState extends State<HomePage> {
         ),
         body: ListView.builder(
           itemCount: value.getExpenseList().length,
-          itemBuilder: (context, index) => ListTile(
-            title: Text(value.getExpenseList()[index].name),
-            trailing: Text('\$ ' + value.getExpenseList()[index].amount),
-            subtitle: Text(
-              value.getExpenseList()[index].dateTime.toString(),
-            ),
-          ),
+          itemBuilder: (context, index) => ExpenseTile(
+              name: value.getExpenseList()[index].name,
+              amount: value.getExpenseList()[index].amount,
+              dateTime: value.getExpenseList()[index].dateTime),
         ),
       ),
     );
