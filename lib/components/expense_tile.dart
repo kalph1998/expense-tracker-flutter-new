@@ -19,7 +19,7 @@ class ExpenseTile extends StatelessWidget {
       title: Text(name),
       trailing: Text('\$ ' + amount),
       subtitle: Text(
-        dateTime.toString(),
+        '${dateTime.day}/${dateTime.month}/${dateTime.year}',
       ),
     );
   }
