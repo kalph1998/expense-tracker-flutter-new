@@ -1,12 +1,16 @@
 import 'package:expense_calculator/models/expense_item.dart';
+import 'package:flutter/material.dart';
 
 import '../datetime/date_time_helper.dart';
 
-class ExpenseData {
+class ExpenseData extends ChangeNotifier {
   // list of all the expenses
   List<ExpenseItem> overallExpenseList = [
     ExpenseItem(
-        name: 'food', amount: '2', dateTime: DateTime.parse('12/09/2020'))
+      name: 'food',
+      amount: '2',
+      dateTime: DateTime.now(),
+    )
   ];
 
   //get expense list
@@ -17,6 +21,7 @@ class ExpenseData {
   // add new Expense
   void addNewExpense(ExpenseItem newExpense) {
     overallExpenseList.add(newExpense);
+    notifyListeners();
   }
 
   //delete expenses

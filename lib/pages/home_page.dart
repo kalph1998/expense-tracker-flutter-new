@@ -1,4 +1,6 @@
+import 'package:expense_calculator/models/expense_item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../data/expense_data.dart';
 
 class HomePage extends StatefulWidget {
@@ -42,17 +44,46 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void save() {}
+  void save() {
+    // create new expense item
+    ExpenseItem newExpense = ExpenseItem(
+      name: newExpenseNameController.text,
+      amount: newExpenseAmountController.text,
+      dateTime: DateTime.now(),
+    );
 
-  void cancel() {}
+    Provider.of<ExpenseData>(context, listen: false).addNewExpense(newExpense);
+    Navigator.of(context).pop();
+  }
+
+  void cancel() {
+    Navigator.of(context).pop();
+  }
+
+  clear() {
+    newExpenseAmountController.clear();
+    newExpenseNameController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[300],
-      floatingActionButton: FloatingActionButton(
-        onPressed: addNewExpense,
-        child: const Icon(Icons.add),
+    return Consumer<ExpenseData>(
+      builder: (context, value, child) => Scaffold(
+        backgroundColor: Colors.grey[300],
+        floatingActionButton: FloatingActionButton(
+          onPressed: addNewExpense,
+          child: const Icon(Icons.add),
+        ),
+        body: ListView.builder(
+          itemCount: value.getExpenseList().length,
+          itemBuilder: (context, index) => ListTile(
+            title: Text(value.getExpenseList()[index].name),
+            trailing: Text('\$ ' + value.getExpenseList()[index].amount),
+            subtitle: Text(
+              value.getExpenseList()[index].dateTime.toString(),
+            ),
+          ),
+        ),
       ),
     );
   }
