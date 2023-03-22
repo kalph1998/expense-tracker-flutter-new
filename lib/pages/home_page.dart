@@ -1,6 +1,8 @@
+import 'package:expense_calculator/components/expense_summary.dart';
 import 'package:expense_calculator/components/expense_tile.dart';
 import 'package:expense_calculator/models/expense_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../data/expense_data.dart';
 
@@ -25,9 +27,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             TextField(
               controller: newExpenseNameController,
+              decoration: const InputDecoration(hintText: 'Expense name'),
             ),
             TextField(
               controller: newExpenseAmountController,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration(hintText: 'Expense amount'),
+              keyboardType: TextInputType.number,
             ),
           ],
         ),
@@ -52,9 +58,12 @@ class _HomePageState extends State<HomePage> {
       amount: newExpenseAmountController.text,
       dateTime: DateTime.now(),
     );
-
+    if (newExpense.amount == '' || newExpense.name == '') {
+      return;
+    }
     Provider.of<ExpenseData>(context, listen: false).addNewExpense(newExpense);
     Navigator.of(context).pop();
+    clear();
   }
 
   void cancel() {
@@ -70,13 +79,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Consumer<ExpenseData>(
       builder: (context, value, child) => Scaffold(
-          backgroundColor: Colors.grey[300],
-          floatingActionButton: FloatingActionButton(
-            onPressed: addNewExpense,
-            child: const Icon(Icons.add),
-          ),
-          body: ListView(
+        backgroundColor: Colors.grey[300],
+        floatingActionButton: FloatingActionButton(
+          onPressed: addNewExpense,
+          backgroundColor: Colors.black,
+          child: const Icon(Icons.add),
+        ),
+        body: SafeArea(
+          child: ListView(
             children: [
+              ExpenseSummary(startOfWeek: value.startOfWeekDate()),
+              const SizedBox(
+                height: 20,
+              ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -87,7 +102,9 @@ class _HomePageState extends State<HomePage> {
                     dateTime: value.getExpenseList()[index].dateTime),
               ),
             ],
-          )),
+          ),
+        ),
+      ),
     );
   }
 }
